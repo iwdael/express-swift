@@ -1,4 +1,4 @@
-@testable import Express_Swift
+@testable import Express
 import Testing
 import Foundation
 

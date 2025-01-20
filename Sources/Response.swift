@@ -4,21 +4,21 @@ import NIOHTTP1
 
 public class Response {
     public var status = HTTPResponseStatus.ok
-    internal var headers = HTTPHeaders()
+    private var headers = HTTPHeaders()
 
-    internal let channel: Channel
+    private let channel: Channel
     private var isHeadSent = false
-    internal var didEnd = false
+    private var didEnd = false
 
-    internal init(channel: Channel) {
+    init(channel: Channel) {
         self.channel = channel
     }
 
-    internal static func makeForUnitTests() -> Response {
+    private static func makeForUnitTests() -> Response {
         return Response(channel: EmbeddedChannel())
     }
 
-    internal func sendHead() {
+    private func sendHead() {
         guard !isHeadSent else { return }
         isHeadSent = true
 
@@ -27,11 +27,11 @@ public class Response {
         _ = channel.writeAndFlush(part).recover(handleError)
     }
 
-    internal func handleError(_: Error) {
+    fileprivate func handleError(_: Error) {
         end()
     }
 
-    internal func end() {
+    fileprivate func end() {
         guard !didEnd else { return }
         didEnd = true
 
@@ -56,5 +56,20 @@ extension Response {
         get {
             return headers[name].joined(separator: ", ")
         }
+    }
+
+    public func send(_ data: Data) {
+        self["Content-Length"] = "\(data.count)"
+
+        sendHead()
+        guard !didEnd else { return }
+
+        var buffer = channel.allocator.buffer(capacity: data.count)
+        buffer.writeBytes(data)
+        let part = HTTPServerResponsePart.body(.byteBuffer(buffer))
+
+        _ = channel.writeAndFlush(part)
+            .recover(handleError)
+            .map { self.end() }
     }
 }

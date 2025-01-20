@@ -8,7 +8,7 @@
 import Foundation
 import NIOHTTP1
 extension Response {
-    func serverError() {
+    public func serverError() {
         status = HTTPResponseStatus.internalServerError
         send(Data())
     }

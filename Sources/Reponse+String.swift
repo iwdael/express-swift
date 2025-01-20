@@ -6,7 +6,7 @@
 //
 
 extension Response {
-    func send(_ string:String) {
+    public func send(_ string:String) {
         self["Content-Type"] = "text/plain;charset=utf-8"
         send(string.data(using: .utf8)!)
     }

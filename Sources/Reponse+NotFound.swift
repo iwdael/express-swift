@@ -8,7 +8,7 @@
 import Foundation
 import NIOHTTP1
 extension Response {
-    func notFound() {
+    public func notFound() {
         status = HTTPResponseStatus.notFound
         send(Data())
     }
