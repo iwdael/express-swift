@@ -14,11 +14,11 @@ public class Response {
         self.channel = channel
     }
 
-    internal static func makeForUnitTests() -> Response {
+    static func makeForUnitTests() -> Response {
         return Response(channel: EmbeddedChannel())
     }
 
-    internal func sendHead() {
+    func sendHead() {
         guard !isHeadSent else { return }
         isHeadSent = true
 
@@ -27,11 +27,11 @@ public class Response {
         _ = channel.writeAndFlush(part).recover(handleError)
     }
 
-    internal func handleError(_: Error) {
+    func handleError(_: Error) {
         end()
     }
 
-    internal func end() {
+    func end() {
         guard !didEnd else { return }
         didEnd = true
 
