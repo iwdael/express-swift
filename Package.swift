@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Express-Swift",
+    name: "Express",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Express-Swift",
-            targets: ["Express-Swift"]),
+            name: "Express",
+            targets: ["Express"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git", .upToNextMajor(from: "2.79.0")),
@@ -19,17 +19,19 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Express-Swift",	
+            name: "Express",	
             dependencies: [
                 .product(name: "NIOSSL", package: "swift-nio-ssl"),
                 .product(name: "NIOHTTP2", package: "swift-nio-http2"),
                 .product(name: "NIOHTTP1", package: "swift-nio"),
                 .product(name: "NIO", package: "swift-nio"),
                 .product(name: "Logging", package: "swift-log"),
-            ]),
+            ],
+            path: "Sources"
+        ),
         .testTarget(
-            name: "Express-SwiftTests",
-            dependencies: ["Express-Swift"]
+            name: "ExpressTests",
+            dependencies: ["Express"]
         ),
     ]
 )
